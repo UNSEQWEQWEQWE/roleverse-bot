@@ -1,0 +1,15 @@
+{
+  "name": "roleverse-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for RoleVerse - dark fantasy RP experience",
+  "main": "bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "node bot.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "node-fetch": "^3.3.2"
+  }
+}
