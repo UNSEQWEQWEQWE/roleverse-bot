@@ -5,6 +5,7 @@
 
 import { Telegraf, Markup, session } from 'telegraf';
 import fetch from 'node-fetch';
+import http from 'http';
 
 // ============================================================================
 // КОНФИГУРАЦИЯ
@@ -367,11 +368,34 @@ bot.on('text', async (ctx) => {
 });
 
 // ============================================================================
-// ЗАПУСК БОТА
+// HTTP СЕРВЕР ДЛЯ RAILWAY
 // ============================================================================
+
+const server = http.createServer(async (req, res) => {
+  if (req.url === '/health' || req.url === '/hello') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('RoleVerse Bot is running!');
+  } else {
+    res.writeHead(404);
+    res.end('Not found');
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🌐 HTTP Server listening on port ${PORT}`);
+});
+
+// Запуск бота
 bot.launch();
 console.log('🤖 RoleVerse Bot запущен...');
 
 // Грейс-шUTDOWN
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+process.once('SIGINT', () => {
+  bot.stop('SIGINT');
+  server.close();
+});
+process.once('SIGTERM', () => {
+  bot.stop('SIGTERM');
+  server.close();
+});
